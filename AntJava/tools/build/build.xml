@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="AntTest" default="copy_startup_bat" basedir="../../">
+
+	<!--定义当前时间-->
+	<tstamp>
+		<format property="current_date" pattern="yyyy_MM_dd_HH_mm_ss" locale="en"></format>
+	</tstamp>
+	
+	<!--打包存放路径-->
+	<property name="package_dest_path" value="runtime/JavaAntTest_${current_date}"></property>
+	
+	<!--定义依赖jar包的路径-->
+	<path id="depend_lib_path">
+		<fileset dir="lib">
+			<include name="*.jar"></include>
+		</fileset>
+	</path>
+	
+	<!--- 组装依赖jar包的路径，用于mainifest文件的Class-Path -->
+	<pathconvert property="class_path" pathsep=" ">
+		<mapper>
+			<chainedmapper>
+				<flattenmapper></flattenmapper>
+				<globmapper from="*" to="lib/*"></globmapper>
+			</chainedmapper>
+		</mapper>
+		<fileset dir="lib">
+			<include name="*jar"></include>
+		</fileset>
+	</pathconvert>
+	
+	<!--创建打包目录-->
+	<target name="make_package_dir">
+		<mkdir dir="${package_dest_path}"></mkdir>
+	</target>
+	<target name="make_bin_dir" depends="make_package_dir">
+		<mkdir dir="${package_dest_path}/bin"></mkdir>
+	</target>
+	<target name="make_bin_lib" depends="make_bin_dir">
+		<mkdir dir="${package_dest_path}/lib"></mkdir>
+	</target>
+
+	<!-- 拷贝依赖的Jar包 -->
+	<target name="copy_lib" depends="make_bin_lib">
+		<copydir src="lib" dest="${package_dest_path}/lib"></copydir>
+	</target>
+	
+	<!--编译生成class文件-->
+	<target name="compile" depends="copy_lib">
+		<javac srcdir="src" destdir="${package_dest_path}/bin" includeantruntime="on">
+			<classpath refid="depend_lib_path"></classpath>
+		</javac>
+	</target>
+	
+	<!-- 打jar包 -->
+	<target name="create_jar" depends="compile">
+		<jar jarfile="${package_dest_path}/AntJavaTest.jar" basedir="${package_dest_path}/bin">
+			<manifest>
+				<attribute name="Main-Class" value="com.elon.StartService"></attribute>
+				<attribute name="Class-Path" value="${class_path}"></attribute>
+			</manifest>
+		</jar>
+	</target>
+	
+	<!--拷贝启动bat文件-->
+	<target name="copy_startup_bat" depends="create_jar">
+		<copy file="tools/build/startup.bat" tofile="${package_dest_path}/startup.bat"></copy>
+	</target>
+	
+</project>
