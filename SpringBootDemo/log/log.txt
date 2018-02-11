@@ -1,0 +1,40 @@
+2018-02-08 13:54:31,645 INFO o.s.b.StartupInfoLogger [restartedMain] Starting App on Lenovo-PC with PID 10924 (E:\workspace\SpringBootDemo\target\classes started by yzy in E:\workspace\SpringBootDemo)
+2018-02-08 13:54:31,654 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to default profiles: default
+2018-02-08 13:54:31,952 INFO o.s.c.s.AbstractApplicationContext [restartedMain] Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4b671cc3: startup date [Thu Feb 08 13:54:31 CST 2018]; root of context hierarchy
+2018-02-08 13:54:33,049 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 5.2.4.Final
+2018-02-08 13:54:37,694 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$1fc4448c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-02-08 13:54:40,554 INFO o.s.b.c.e.t.TomcatEmbeddedServletContainer [restartedMain] Tomcat initialized with port(s): 8080 (http)
+2018-02-08 13:54:40,599 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service Tomcat
+2018-02-08 13:54:40,604 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet Engine: Apache Tomcat/8.5.4
+2018-02-08 13:54:40,997 INFO o.a.j.l.DirectJDKLog [localhost-startStop-1] Initializing Spring embedded WebApplicationContext
+2018-02-08 13:54:40,998 INFO o.s.b.c.e.EmbeddedWebApplicationContext [localhost-startStop-1] Root WebApplicationContext: initialization completed in 9086 ms
+2018-02-08 13:54:41,711 INFO o.s.b.w.s.ServletRegistrationBean [localhost-startStop-1] Mapping servlet: 'dispatcherServlet' to [/]
+2018-02-08 13:54:41,728 INFO o.s.b.w.s.AbstractFilterRegistrationBean [localhost-startStop-1] Mapping filter: 'characterEncodingFilter' to: [/*]
+2018-02-08 13:54:41,730 INFO o.s.b.w.s.AbstractFilterRegistrationBean [localhost-startStop-1] Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2018-02-08 13:54:41,731 INFO o.s.b.w.s.AbstractFilterRegistrationBean [localhost-startStop-1] Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2018-02-08 13:54:41,732 INFO o.s.b.w.s.AbstractFilterRegistrationBean [localhost-startStop-1] Mapping filter: 'requestContextFilter' to: [/*]
+2018-02-08 13:54:44,098 INFO o.s.w.s.m.m.a.RequestMappingHandlerAdapter [restartedMain] Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@4b671cc3: startup date [Thu Feb 08 13:54:31 CST 2018]; root of context hierarchy
+2018-02-08 13:54:44,373 INFO o.s.w.s.h.AbstractHandlerMethodMapping$MappingRegistry [restartedMain] Mapped "{[/example/v1/query-user],methods=[GET]}" onto public java.util.List<com.elon.springbootdemo.model.User> com.elon.springbootdemo.ws.WSExample.queryUser(java.lang.String)
+2018-02-08 13:54:44,376 INFO o.s.w.s.h.AbstractHandlerMethodMapping$MappingRegistry [restartedMain] Mapped "{[/example/v1/add-user],methods=[POST]}" onto public void com.elon.springbootdemo.ws.WSExample.addUserV1(com.elon.springbootdemo.model.User)
+2018-02-08 13:54:44,377 INFO o.s.w.s.h.AbstractHandlerMethodMapping$MappingRegistry [restartedMain] Mapped "{[/example/v3/add-user],methods=[POST]}" onto public void com.elon.springbootdemo.ws.WSExample.addUserV3(com.elon.springbootdemo.model.User)
+2018-02-08 13:54:44,384 INFO o.s.w.s.h.AbstractHandlerMethodMapping$MappingRegistry [restartedMain] Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2018-02-08 13:54:44,386 INFO o.s.w.s.h.AbstractHandlerMethodMapping$MappingRegistry [restartedMain] Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-02-08 13:54:44,527 INFO o.s.w.s.h.AbstractUrlHandlerMapping [restartedMain] Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-02-08 13:54:44,528 INFO o.s.w.s.h.AbstractUrlHandlerMapping [restartedMain] Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-02-08 13:54:44,701 INFO o.s.w.s.h.AbstractUrlHandlerMapping [restartedMain] Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-02-08 13:54:45,731 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2018-02-08 13:54:45,988 INFO o.s.j.e.MBeanExporter [restartedMain] Registering beans for JMX exposure on startup
+2018-02-08 13:54:46,127 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2018-02-08 13:54:46,245 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler [http-nio-8080]
+2018-02-08 13:54:46,313 INFO o.a.j.l.DirectJDKLog [restartedMain] Using a shared selector for servlet write/read
+2018-02-08 13:54:46,811 INFO o.s.b.c.e.t.TomcatEmbeddedServletContainer [restartedMain] Tomcat started on port(s): 8080 (http)
+2018-02-08 13:54:46,832 INFO o.s.b.StartupInfoLogger [restartedMain] Started App in 16.351 seconds (JVM running for 19.427)
+2018-02-08 13:55:01,420 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring FrameworkServlet 'dispatcherServlet'
+2018-02-08 13:55:01,421 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] FrameworkServlet 'dispatcherServlet': initialization started
+2018-02-08 13:55:01,496 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] FrameworkServlet 'dispatcherServlet': initialization completed in 74 ms
+2018-02-08 13:55:01,612 INFO c.e.s.w.WSExample [http-nio-8080-exec-1] [INFO]user info:elon
+2018-02-08 13:55:01,613 WARN c.e.s.w.WSExample [http-nio-8080-exec-1] [WARN]user info:elon
+2018-02-08 13:55:01,614 ERROR c.e.s.w.WSExample [http-nio-8080-exec-1] [ERROR]user info:elon
+2018-02-08 13:55:08,944 INFO c.e.s.w.WSExample [http-nio-8080-exec-3] [INFO]user info:elon
+2018-02-08 13:55:08,945 WARN c.e.s.w.WSExample [http-nio-8080-exec-3] [WARN]user info:elon
+2018-02-08 13:55:08,945 ERROR c.e.s.w.WSExample [http-nio-8080-exec-3] [ERROR]user info:elon
