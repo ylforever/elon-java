@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="WebAntTest" default="create_war" basedir="../../">
+	<!--定义当前时间-->
+	<tstamp>
+		<format property="current_date" pattern="yyyy_MM_dd_HH_mm_ss" locale="en"></format>
+	</tstamp>
+	
+	<!--定义依赖jar包的路径-->
+	<path id="depend_lib_path">
+		<fileset dir="WebContent\WEB-INF\lib">
+			<include name="*.jar"></include>
+		</fileset>
+	</path>
+	
+	<!--删除旧的打包文件(含war包和编译文件)-->
+	<target name="clean">
+		<delete verbose="true" includeemptydirs="true">
+            <fileset dir="build">
+                <include name="**/*"/>
+            </fileset>
+        </delete>
+		<delete verbose="true" includeemptydirs="true">
+            <fileset dir="runtime">
+                <include name="**/*"/>
+            </fileset>
+        </delete>
+	</target>
+	
+	<!--编译生成class文件-->
+	<target name="compile" depends="clean">
+		<javac srcdir="src" destdir="build" includeantruntime="on">
+			<classpath refid="depend_lib_path"></classpath>
+		</javac>
+	</target>
+	
+	<!--打war包-->
+	<target name="create_war" depends="compile">
+		<war destfile="runtime/AntWeb.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent">
+				<exclude name="**.jar"/>
+				<exclude name="**.class"/>
+			</fileset>
+			<lib dir="WebContent\WEB-INF\lib"></lib>
+			<classes dir="build"/>
+		</war>
+	</target>	
+</project>
