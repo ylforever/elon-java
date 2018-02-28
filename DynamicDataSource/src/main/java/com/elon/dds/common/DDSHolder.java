@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Timer;
 
-import org.springframework.stereotype.Component;
+import org.apache.tomcat.jdbc.pool.DataSource;
 
 /**
  * 动态数据源管理器。
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
  * @author elon
  * @version 2018年2月25日
  */
-@Component
 public class DDSHolder {
 	
 	/**
@@ -27,9 +26,19 @@ public class DDSHolder {
 	 */
 	private static Timer clearIdleTask = new Timer();
 	static {
-		clearIdleTask.schedule(new ClearIldleTimerTask(), 5000, 60 * 1000);
+		clearIdleTask.schedule(new ClearIdleTimerTask(), 5000, 60 * 1000);
 	};
-;
+	
+	private DDSHolder() {
+		
+	}
+	
+	/*
+	 * 获取单例对象
+	 */
+	public static DDSHolder instance() {
+		return DDSHolderBuilder.instance;
+	}
 	
 	/**
 	 * 添加动态数据源。
@@ -37,7 +46,7 @@ public class DDSHolder {
 	 * @param projectCode 项目编码 
 	 * @param dds dds
 	 */
-	public synchronized void addDDS(String projectCode, DynamicDataSource dds) {
+	public synchronized void addDDS(String projectCode, DataSource dds) {
 		
 		DDSTimer ddst = new DDSTimer(dds);
 		ddsMap.put(projectCode, ddst);
@@ -49,7 +58,7 @@ public class DDSHolder {
 	 * @param projectCode 项目编码
 	 * @return dds
 	 */
-	public synchronized DynamicDataSource getDDS(String projectCode) {
+	public synchronized DataSource getDDS(String projectCode) {
 		
 		if (ddsMap.containsKey(projectCode)) {
 			DDSTimer ddst = ddsMap.get(projectCode);
@@ -74,5 +83,14 @@ public class DDSHolder {
 				iter.remove();
 			}
 		}
+	}
+	
+	/**
+	 * 单例构件类
+	 * @author elon
+	 * @version 2018年2月26日
+	 */
+	private static class DDSHolderBuilder {
+		private static DDSHolder instance = new DDSHolder();
 	}
 }

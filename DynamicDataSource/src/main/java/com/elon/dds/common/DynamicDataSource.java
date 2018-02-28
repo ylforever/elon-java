@@ -1,13 +1,13 @@
 package com.elon.dds.common;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mysql.jdbc.Connection;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 /**
  * 定义动态数据源派生类。从基础的DataSource派生，动态性自己实现。
@@ -19,12 +19,6 @@ public class DynamicDataSource extends DataSource {
 	
 	private static Logger log = LogManager.getLogger(DynamicDataSource.class);
 	
-	@Autowired
-	private DDSHolder holder;
-	
-	@Autowired
-	private ProjectDBMgr dbMgr;
-	
 	/**
 	 * 改写本方法是为了在请求不同工程的数据时去连接不同的数据库。
 	 */
@@ -34,20 +28,26 @@ public class DynamicDataSource extends DataSource {
 		String projectCode = DBIdentifier.getProjectCode();
 		
 		//1、获取数据源
-		DynamicDataSource dds = holder.getDDS(projectCode);
+		DataSource dds = DDSHolder.instance().getDDS(projectCode);
 		
 		//2、如果数据源不存在则创建
 		if (dds == null) {
 			try {
-				DynamicDataSource newDDS = initDDS(projectCode);
-				holder.addDDS(projectCode, newDDS);
+				DataSource newDDS = initDDS(projectCode);
+				DDSHolder.instance().addDDS(projectCode, newDDS);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				log.error("Init data source fail. projectCode:" + projectCode);
 				return null;
 			}
 		}
-				
-		return holder.getDDS(projectCode).getConnection();
+		
+		dds = DDSHolder.instance().getDDS(projectCode);
+		try {
+			return dds.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
@@ -57,20 +57,33 @@ public class DynamicDataSource extends DataSource {
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	private DynamicDataSource initDDS(String projectCode) throws IllegalArgumentException, IllegalAccessException {
-		DynamicDataSource dds = new DynamicDataSource();
-
-		// 1、clone属性
-		Field[] fields = DynamicDataSource.class.getFields();
-		for (Field f : fields) {
+	private DataSource initDDS(String projectCode) throws IllegalArgumentException, IllegalAccessException {
+		
+		DataSource dds = new DataSource();
+		
+		// 2、复制PoolConfiguration的属性
+		PoolProperties property = new PoolProperties();
+		Field[] pfields = PoolProperties.class.getDeclaredFields();
+		for (Field f : pfields) {
 			f.setAccessible(true);
-			Object value = f.get(this);
-			f.set(dds, value);
+			Object value = f.get(this.getPoolProperties());
+			
+			try
+			{
+				f.set(property, value);				
+			}
+			catch (Exception e)
+			{
+				log.info("Set value fail. attr name:" + f.getName());
+				continue;
+			}
 		}
+		dds.setPoolProperties(property);
 
-		// 2、设置数据库名称和IP(一般来说，端口和用户名、密码都是统一固定的)
+		// 3、设置数据库名称和IP(一般来说，端口和用户名、密码都是统一固定的)
 		String urlFormat = this.getUrl();
-		String url = String.format(urlFormat, dbMgr.getDBIP(projectCode), dbMgr.getDBName(projectCode));
+		String url = String.format(urlFormat, ProjectDBMgr.instance().getDBIP(projectCode), 
+				ProjectDBMgr.instance().getDBName(projectCode));
 		dds.setUrl(url);
 
 		return dds;

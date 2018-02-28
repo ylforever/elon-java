@@ -3,14 +3,11 @@ package com.elon.dds.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
 /**
  * 项目数据库管理。提供根据项目编码查询数据库名称和IP的接口。
  * @author elon
  * @version 2018年2月25日
  */
-@Component
 public class ProjectDBMgr {
 	
 	/**
@@ -24,7 +21,7 @@ public class ProjectDBMgr {
 	 */
 	private Map<String, String> dbIPMap = new HashMap<String, String>();
 	
-	public ProjectDBMgr() {
+	private ProjectDBMgr() {
 		dbNameMap.put("project_001", "db_project_001");
 		dbNameMap.put("project_002", "db_project_002");
 		dbNameMap.put("project_003", "db_project_003");
@@ -32,6 +29,10 @@ public class ProjectDBMgr {
 		dbIPMap.put("project_001", "127.0.0.1");
 		dbIPMap.put("project_002", "127.0.0.1");
 		dbIPMap.put("project_003", "127.0.0.1");
+	}
+	
+	public static ProjectDBMgr instance() {
+		return ProjectDBMgrBuilder.instance;
 	}
 	
 	// 实际开发中改为从缓存获取
@@ -50,5 +51,9 @@ public class ProjectDBMgr {
 		}
 		
 		return "";
+	}
+	
+	private static class ProjectDBMgrBuilder {
+		private static ProjectDBMgr instance = new ProjectDBMgr();
 	}
 }
