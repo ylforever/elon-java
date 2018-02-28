@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.elon.dds.common.DBIdentifier;
+import com.elon.dds.datasource.DBIdentifier;
 import com.elon.dds.mapper.UserMapper;
 import com.elon.dds.model.User;
 

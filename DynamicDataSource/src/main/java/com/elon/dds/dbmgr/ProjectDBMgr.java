@@ -1,4 +1,4 @@
-package com.elon.dds.common;
+package com.elon.dds.dbmgr;
 
 import java.util.HashMap;
 import java.util.Map;

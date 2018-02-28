@@ -1,4 +1,4 @@
-package com.elon.dds.common;
+package com.elon.dds.datasource;
 
 /**
  * 数据库标识管理类。用于区分数据源连接的不同数据库。

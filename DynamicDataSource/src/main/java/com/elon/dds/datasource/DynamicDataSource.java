@@ -1,4 +1,4 @@
-package com.elon.dds.common;
+package com.elon.dds.datasource;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+
+import com.elon.dds.dbmgr.ProjectDBMgr;
 
 /**
  * 定义动态数据源派生类。从基础的DataSource派生，动态性自己实现。
