@@ -76,6 +76,7 @@ public class DynamicDataSource extends DataSource {
 			}
 			catch (Exception e)
 			{
+				//有一些static final的属性不能修改。忽略。
 				log.info("Set value fail. attr name:" + f.getName());
 				continue;
 			}
