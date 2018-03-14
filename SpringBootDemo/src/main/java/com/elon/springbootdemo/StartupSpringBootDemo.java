@@ -11,11 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.elon.springbootdemo")
-public class App 
+public class StartupSpringBootDemo 
 {
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
-        SpringApplication.run(App.class, args);
+        SpringApplication.run(StartupSpringBootDemo.class, args);
     }
 }
