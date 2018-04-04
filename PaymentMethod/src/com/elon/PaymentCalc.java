@@ -135,13 +135,17 @@ public class PaymentCalc {
 		}
 
 		for (Map<Integer, Integer> payMap : allPayMap) {
+			boolean bFit = true;
 			for (Entry<Integer, Integer> entry : payMap.entrySet()) {
 				if (!moneyMap.containsKey(entry.getKey()) || moneyMap.get(entry.getKey()) < entry.getValue()) {
-					continue;
+					bFit = false;
+					break;
 				}
 			}
-
-			fitPayMap.add(payMap);
+			
+			if (bFit) {
+				fitPayMap.add(payMap);
+			}
 		}
 
 		return fitPayMap;
