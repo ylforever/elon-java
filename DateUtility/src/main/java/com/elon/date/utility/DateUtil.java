@@ -1,5 +1,6 @@
 package com.elon.date.utility;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -23,7 +24,7 @@ public class DateUtil {
 
 		@Override
 		protected SimpleDateFormat initialValue() {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			format.setTimeZone(TimeZone.getTimeZone("UTC"));
 			return format;
 		}
@@ -36,7 +37,7 @@ public class DateUtil {
 
 		@Override
 		protected SimpleDateFormat initialValue() {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			return format;
 		}
 	};
@@ -44,7 +45,7 @@ public class DateUtil {
 	/**
 	 * 将UTC日期转换为字符串形式。方便日志文件记录。
 	 * @param date 日期
-	 * @return yyyy-MM-dd hh:mm:ss格式的字符串
+	 * @return yyyy-MM-dd HH:mm:ss格式的字符串
 	 */
 	public static String toUTCDateString(Date date) {
 		return utcDateFormatter.get().format(date);
@@ -54,16 +55,16 @@ public class DateUtil {
 	 * 将UTC时间戳转换为字符串格式。
 	 * 
 	 * @param timestamp 时间戳
-	 * @return yyyy-MM-dd hh:mm:ss格式的字符串
+	 * @return yyyy-MM-dd HH:mm:ss格式的字符串
 	 */
 	public static String timeStamp2UTCDateStr(long timestamp) {
 		return toUTCDateString(new Date(timestamp));
 	}
 	
 	/**
-	 * 获取当前系统时间的utc格式
+	 * 获取当前utc时间
 	 * 
-	 * @return yyyy-MM-dd hh:mm:ss格式的utc时间字符串
+	 * @return yyyy-MM-dd HH:mm:ss格式的utc时间字符串
 	 */
 	public static String getCurrentUTC() {
 		
@@ -78,6 +79,16 @@ public class DateUtil {
 	 */
 	public static String toLocalDateStr(Date date) {
 		return localDateFormatter.get().format(date);
+	}
+	
+	/**
+	 * 解析utc时间字符串，转换为Date对象
+	 * @param utcDateStr utc时间字符串,格式为：yyyy-MM-dd HH:mm:ss
+	 * @return Date
+	 * @throws ParseException 解析异常
+	 */
+	public static Date toUTCDate(String utcDateStr) throws ParseException {
+		return utcDateFormatter.get().parse(utcDateStr);
 	}
 }
 
