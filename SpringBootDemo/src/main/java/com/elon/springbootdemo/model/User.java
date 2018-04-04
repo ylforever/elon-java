@@ -1,5 +1,7 @@
 package com.elon.springbootdemo.model;
 
+import com.elon.springbootdemo.constant.EnumSexType;
+
 public class User
 {
 	private int userId = -1;
@@ -7,6 +9,8 @@ public class User
 	private String name = "";
 	
 	private int age = -1;
+	
+	private EnumSexType sexType = EnumSexType.NA;
 	
 	@Override
 	public String toString()
@@ -42,5 +46,13 @@ public class User
 	public void setAge(int age)
 	{
 		this.age = age;
+	}
+
+	public EnumSexType getSexType() {
+		return sexType;
+	}
+
+	public void setSexType(EnumSexType sexType) {
+		this.sexType = sexType;
 	}
 }
