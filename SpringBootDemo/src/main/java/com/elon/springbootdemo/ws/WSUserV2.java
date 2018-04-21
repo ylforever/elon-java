@@ -1,6 +1,7 @@
 package com.elon.springbootdemo.ws;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.elon.springbootdemo.constant.EnumSexType;
 import com.elon.springbootdemo.mapper.UserMapperV2;
+import com.elon.springbootdemo.model.QueryMapHelper;
 import com.elon.springbootdemo.model.User;
 
 @RestController
@@ -42,4 +44,13 @@ public class WSUserV2 {
 		return userMapper.getAllUsers();
 	}
 	
+	@RequestMapping(value="/v2/query-user-age", method=RequestMethod.GET)
+	public Map<Integer, Integer> queryUserAge(){
+		
+		/**
+		 * 将查询结果列表转换为Map结构
+		 */
+		Map<Integer, Integer> userAgeMap = QueryMapHelper.toMap(userMapper.queryUserAge());
+		return userAgeMap;
+	}
 }

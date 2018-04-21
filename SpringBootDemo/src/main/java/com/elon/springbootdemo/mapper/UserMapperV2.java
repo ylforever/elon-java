@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import com.elon.springbootdemo.constant.EnumSexTypeHandler;
+import com.elon.springbootdemo.model.QueryMapHelper;
 import com.elon.springbootdemo.model.User;
 
 /**
@@ -48,4 +49,16 @@ public interface UserMapperV2 {
 		@Result(property="sexType", column="sex", typeHandler=EnumSexTypeHandler.class)
 	})
 	List<User> getAllUsers();
+	
+	@Select("select id, age from tbl_user")
+	
+	/**
+	 * 查询所有用户的ID和年龄信息。
+	 * @return 数据列表
+	 */
+	@Results({
+		@Result(property="key", column="id"),
+		@Result(property="value", column="age")
+	})
+	List<QueryMapHelper<Integer, Integer>> queryUserAge();
 }
