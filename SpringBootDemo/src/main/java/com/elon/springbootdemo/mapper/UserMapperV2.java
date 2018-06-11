@@ -50,12 +50,11 @@ public interface UserMapperV2 {
 	})
 	List<User> getAllUsers();
 	
-	@Select("select id, age from tbl_user")
-	
 	/**
 	 * 查询所有用户的ID和年龄信息。
 	 * @return 数据列表
 	 */
+	@Select("select id, age from tbl_user")
 	@Results({
 		@Result(property="key", column="id"),
 		@Result(property="value", column="age")
