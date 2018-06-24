@@ -10,6 +10,9 @@ public class StartupGeoTools {
 	    String workSpacePath = System.getProperty("user.dir");
 	    String shpFilePath = workSpacePath + File.separator + "shape/ne_50m_admin_0_countries/ne_50m_admin_0_countries.shp";
 	    ShapeUtils.distillShapeFieldInfo(shpFilePath);
-		System.out.println("Start GeoTools success!");
+		
+	    
+	    
+	    System.out.println("Start GeoTools success!");
 	}
 }

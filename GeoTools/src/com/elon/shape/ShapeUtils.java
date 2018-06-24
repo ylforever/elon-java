@@ -3,6 +3,7 @@ package com.elon.shape;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class ShapeUtils {
         ShapefileDataStore dataStroe = buildDataStore(shpFilePath);
 
         try {
-            List<AttributeDescriptor> attrList = dataStroe.getFeatureSource().getSchema().getAttributeDescriptors();
+            List<AttributeDescriptor> attrList = dataStroe.getFeatureSource().getSchema()
+                    .getAttributeDescriptors();
             for (AttributeDescriptor attr : attrList) {
                 ShapeFieldInfo field = new ShapeFieldInfo();
                 field.setFieldName(attr.getLocalName());
@@ -57,6 +59,9 @@ public class ShapeUtils {
         try {
             ShapefileDataStore dataStore = (ShapefileDataStore) factory
                     .createDataStore(new File(shpFilePath).toURI().toURL());
+            if (dataStore != null) {
+                dataStore.setCharset(Charset.forName("UTF-8"));
+            }
             return dataStore;
         } catch (MalformedURLException e) {
             e.printStackTrace();
