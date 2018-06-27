@@ -108,6 +108,28 @@ public class ShapeUtils {
     }
     
     /**
+     * 获取Shape文件的坐标系信息。
+     * 
+     * @param shpFilePath shp文件路径
+     * @return 坐标系的WKT形式
+     */
+    public static String getCoordinateSystemWKT(String shpFilePath) {
+
+        ShapefileDataStore dataStore = buildDataStore(shpFilePath);
+
+        try {
+            return dataStore.getSchema().getCoordinateReferenceSystem().toWKT();
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            dataStore.dispose();
+        }
+        return "";
+    }
+    
+    /**
      * 填充GIS对象的属性信息。
      * 
      * @param gisObjectList gis对象列表

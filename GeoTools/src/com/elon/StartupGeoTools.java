@@ -19,6 +19,9 @@ public class StartupGeoTools {
 	    List<GisMultiPolygon> gisObjectList = ShapeUtils.readGisObject(shpFilePath);
 	    System.out.println("gisObjectList size:" + gisObjectList.size());
 	    
+	    String wkt = ShapeUtils.getCoordinateSystemWKT(shpFilePath);
+	    System.out.println("WKT:" + wkt);
+	    
 	    System.out.println("Start GeoTools success!");
 	}
 }
