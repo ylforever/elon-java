@@ -71,8 +71,9 @@ public class ShapeUtils {
     @SuppressWarnings("unchecked")
     public static <T extends GISObjectBase> List<T> readGisObject(String shpFilePath) {
         List<T> gisObjectList = new ArrayList<>();
+        List<ShapeFieldInfo> attrFieldList = distillShapeFieldInfo(shpFilePath);
         ShapefileDataStore dataStore = buildDataStore(shpFilePath);
-
+        
         try {
             String typeName = dataStore.getTypeNames()[0];
             FeatureSource<SimpleFeatureType, SimpleFeature> fs = dataStore.getFeatureSource(typeName);
@@ -88,11 +89,11 @@ public class ShapeUtils {
                     Property pro = iterP.next();
                     
                     if (pro.getValue() instanceof MultiPolygon) {
-                        gisObjectList.add((T) new GisMultiPolygon((MultiPolygon) pro.getValue(), sf));
+                        gisObjectList.add((T) new GisMultiPolygon((MultiPolygon) pro.getValue(), sf, attrFieldList));
                     } else if (pro.getValue() instanceof Point) {
-                        gisObjectList.add((T) new GISPoint((Point) pro.getValue(), sf));
+                        gisObjectList.add((T) new GISPoint((Point) pro.getValue(), sf, attrFieldList));
                     } else if (pro.getValue() instanceof MultiLineString) {
-                        gisObjectList.add((T) new GisLine((MultiLineString) pro.getValue(), sf));
+                        gisObjectList.add((T) new GisLine((MultiLineString) pro.getValue(), sf, attrFieldList));
                     }
                 }
             }
@@ -102,7 +103,24 @@ public class ShapeUtils {
             dataStore.dispose();
         }
 
+        fillGisObjectAttr(gisObjectList);
         return gisObjectList;
+    }
+    
+    /**
+     * 填充GIS对象的属性信息。
+     * 
+     * @param gisObjectList gis对象列表
+     */
+    private static <T extends GISObjectBase> void fillGisObjectAttr(List<T> gisObjectList) {
+        for(T gisObject : gisObjectList) {
+            for(ShapeFieldInfo field : gisObject.getAttrFieldList()) {
+                Object value = gisObject.getSimpleFeature().getAttribute(field.getFieldName());
+                gisObject.addAttribute(field.getFieldName(), value);
+            }
+            
+            System.out.println(gisObject.getAttributeMap());
+        }
     }
     
     /**

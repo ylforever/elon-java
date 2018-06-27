@@ -1,8 +1,11 @@
 package com.elon.model.gismodel;
 
+import java.util.List;
+
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.elon.constant.EnumGISObjectType;
+import com.elon.model.ShapeFieldInfo;
 import com.vividsolutions.jts.geom.MultiLineString;
 
 /**
@@ -20,8 +23,8 @@ public class GisLine extends GISObjectBase {
      */
     private MultiLineString line = null;
     
-    public GisLine(MultiLineString line, SimpleFeature simpleFeature) {
-        super(EnumGISObjectType.LINE, simpleFeature);
+    public GisLine(MultiLineString line, SimpleFeature simpleFeature, List<ShapeFieldInfo> attrFieldList) {
+        super(EnumGISObjectType.LINE, simpleFeature, attrFieldList);
         this.line = line;
     }
 

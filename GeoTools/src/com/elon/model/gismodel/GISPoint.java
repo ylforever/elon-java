@@ -1,8 +1,11 @@
 package com.elon.model.gismodel;
 
+import java.util.List;
+
 import org.opengis.feature.simple.SimpleFeature;
 
 import com.elon.constant.EnumGISObjectType;
+import com.elon.model.ShapeFieldInfo;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -19,8 +22,8 @@ public class GISPoint extends GISObjectBase {
      */
     private Point point = null;
 
-    public GISPoint(Point point, SimpleFeature simpleFeature) {
-        super(EnumGISObjectType.POINT, simpleFeature);
+    public GISPoint(Point point, SimpleFeature simpleFeature, List<ShapeFieldInfo> attrFieldList) {
+        super(EnumGISObjectType.POINT, simpleFeature, attrFieldList);
         this.point = point;
     }
 
