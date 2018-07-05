@@ -22,6 +22,11 @@ public class ShapeFieldInfo implements Serializable {
      */
     private Class<?> fieldType = null;
     
+    public ShapeFieldInfo(String fieldName, Class<?> fieldType) {
+        this.fieldName = fieldName;
+        this.fieldType = fieldType;
+    }
+    
     @Override
     public String toString() {
         return "fieldName:" + fieldName + "|fieldType:" + fieldType.getName();

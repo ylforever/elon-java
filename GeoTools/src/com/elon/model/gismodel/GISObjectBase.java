@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.opengis.feature.simple.SimpleFeature;
-
 import com.elon.constant.EnumGISObjectType;
 import com.elon.model.ShapeFieldInfo;
 
@@ -26,8 +24,6 @@ public class GISObjectBase implements Serializable {
      */
     private final EnumGISObjectType type;
     
-    private SimpleFeature simpleFeature = null;
-    
     /**
      * 属性列信息
      */
@@ -38,21 +34,16 @@ public class GISObjectBase implements Serializable {
      */
     private Map<String, Object> attributeMap = new HashMap<>();
     
-    protected GISObjectBase(EnumGISObjectType type, SimpleFeature simpleFeature,
+    protected GISObjectBase(EnumGISObjectType type,
             List<ShapeFieldInfo> attrFieldList){
         this.type = type;
-        this.simpleFeature = simpleFeature;
         this.attrFieldList = attrFieldList;
     }
 
     public EnumGISObjectType getType() {
         return type;
     }
-
-    public SimpleFeature getSimpleFeature() {
-        return simpleFeature;
-    }
-
+    
     public Map<String, Object> getAttributeMap() {
         return attributeMap;
     }
@@ -63,10 +54,6 @@ public class GISObjectBase implements Serializable {
     
     public void addAttribute(String attrName, Object value) {
         attributeMap.put(attrName, value);
-    }
-
-    public void setSimpleFeature(SimpleFeature simpleFeature) {
-        this.simpleFeature = simpleFeature;
     }
 
     public List<ShapeFieldInfo> getAttrFieldList() {

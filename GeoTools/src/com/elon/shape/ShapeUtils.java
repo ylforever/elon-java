@@ -10,10 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.geotools.data.FeatureSource;
+import org.geotools.data.FeatureWriter;
+import org.geotools.data.Transaction;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -49,9 +53,7 @@ public class ShapeUtils {
             List<AttributeDescriptor> attrList = dataStroe.getFeatureSource().getSchema()
                     .getAttributeDescriptors();
             for (AttributeDescriptor attr : attrList) {
-                ShapeFieldInfo field = new ShapeFieldInfo();
-                field.setFieldName(attr.getLocalName());
-                field.setFieldType(attr.getType().getBinding());
+                ShapeFieldInfo field = new ShapeFieldInfo(attr.getLocalName(), attr.getType().getBinding());
                 fieldList.add(field);
             }
         } catch (IOException e) {
@@ -73,7 +75,7 @@ public class ShapeUtils {
         List<T> gisObjectList = new ArrayList<>();
         List<ShapeFieldInfo> attrFieldList = distillShapeFieldInfo(shpFilePath);
         ShapefileDataStore dataStore = buildDataStore(shpFilePath);
-        
+
         try {
             String typeName = dataStore.getTypeNames()[0];
             FeatureSource<SimpleFeatureType, SimpleFeature> fs = dataStore.getFeatureSource(typeName);
@@ -87,14 +89,21 @@ public class ShapeUtils {
                 Iterator<Property> iterP = property.iterator();
                 while (iterP.hasNext()) {
                     Property pro = iterP.next();
-                    
+
+                    T t = null;
                     if (pro.getValue() instanceof MultiPolygon) {
-                        gisObjectList.add((T) new GisMultiPolygon((MultiPolygon) pro.getValue(), sf, attrFieldList));
+                        t = (T) new GisMultiPolygon((MultiPolygon) pro.getValue(), attrFieldList);
                     } else if (pro.getValue() instanceof Point) {
-                        gisObjectList.add((T) new GISPoint((Point) pro.getValue(), sf, attrFieldList));
+                        t = (T) new GISPoint((Point) pro.getValue(), attrFieldList);
                     } else if (pro.getValue() instanceof MultiLineString) {
-                        gisObjectList.add((T) new GisLine((MultiLineString) pro.getValue(), sf, attrFieldList));
+                        t = (T) new GisLine((MultiLineString) pro.getValue(), attrFieldList);
+                    } else {
+                        System.out.print("Invalid gis object type:" + pro.getValue().getClass());
+                        continue;
                     }
+
+                    fillGisObjectAttr(t, sf);
+                    gisObjectList.add(t);
                 }
             }
         } catch (IOException e) {
@@ -103,7 +112,6 @@ public class ShapeUtils {
             dataStore.dispose();
         }
 
-        fillGisObjectAttr(gisObjectList);
         return gisObjectList;
     }
     
@@ -129,20 +137,47 @@ public class ShapeUtils {
         return "";
     }
     
+    public static void writePoint2ShapeFile(ShapefileDataStore dataStore, List<GISPoint> pointList,
+        List<ShapeFieldInfo> attrFieldList) throws IOException {
+
+        // 设置图层对象属性
+        SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
+        sb.setCRS(DefaultGeographicCRS.WGS84);
+
+        sb.setName("point shape");
+        attrFieldList.forEach((f) -> sb.add(f.getFieldName(), f.getFieldType()));
+        sb.add("the_geom", Point.class);
+
+        dataStore.createSchema(sb.buildFeatureType());
+        dataStore.setCharset(Charset.forName("UTF-8"));
+
+        FeatureWriter<SimpleFeatureType, SimpleFeature> writer = dataStore.getFeatureWriter(dataStore.getTypeNames()[0],
+                Transaction.AUTO_COMMIT);
+
+        // 写数据
+        for (GISPoint point : pointList) {
+            SimpleFeature feature = writer.next();
+            feature.setAttribute("the_geom", point.getPoint());
+            point.getAttributeMap().forEach((k, v) -> feature.setAttribute(k, v));
+            writer.write();
+        }
+
+        // feature.setAttribute("the_geom", new GeometryFactory().createPoint(co));
+        writer.close();
+    }
+    
     /**
      * 填充GIS对象的属性信息。
      * 
      * @param gisObjectList gis对象列表
      */
-    private static <T extends GISObjectBase> void fillGisObjectAttr(List<T> gisObjectList) {
-        for(T gisObject : gisObjectList) {
-            for(ShapeFieldInfo field : gisObject.getAttrFieldList()) {
-                Object value = gisObject.getSimpleFeature().getAttribute(field.getFieldName());
-                gisObject.addAttribute(field.getFieldName(), value);
-            }
-            
-            System.out.println(gisObject.getAttributeMap());
+    private static <T extends GISObjectBase> void fillGisObjectAttr(T gisObject, SimpleFeature feature) {
+        for (ShapeFieldInfo field : gisObject.getAttrFieldList()) {
+            Object value = feature.getAttribute(field.getFieldName());
+            gisObject.addAttribute(field.getFieldName(), value);
         }
+
+        System.out.println(gisObject.getAttributeMap());
     }
     
     /**

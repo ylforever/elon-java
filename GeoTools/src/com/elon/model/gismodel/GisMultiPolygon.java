@@ -2,8 +2,6 @@ package com.elon.model.gismodel;
 
 import java.util.List;
 
-import org.opengis.feature.simple.SimpleFeature;
-
 import com.elon.constant.EnumGISObjectType;
 import com.elon.model.ShapeFieldInfo;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -23,9 +21,8 @@ public class GisMultiPolygon extends GISObjectBase {
      */
     private MultiPolygon polygon = null;;
     
-    public GisMultiPolygon(MultiPolygon polygon, SimpleFeature simpleFeature,
-            List<ShapeFieldInfo> attrFieldList) {
-        super(EnumGISObjectType.POLYGON, simpleFeature, attrFieldList);
+    public GisMultiPolygon(MultiPolygon polygon, List<ShapeFieldInfo> attrFieldList) {
+        super(EnumGISObjectType.POLYGON, attrFieldList);
         this.polygon = polygon;
     }
 
