@@ -18,16 +18,6 @@ public class StartupGeoTools {
 	public static void main(String[] args) throws IOException {
 	    
 	    String workSpacePath = System.getProperty("user.dir");
-	    String shpFilePath = workSpacePath + File.separator + "shape/ne_50m_admin_0_countries/ne_50m_admin_0_countries.shp";
-	    
-	    List<ShapeFieldInfo> fieldList = ShapeUtils.distillShapeFieldInfo(shpFilePath);
-        System.out.println("fieldList:" + fieldList);
-
-	    List<GisMultiPolygon> gisObjectList = ShapeUtils.readGisObject(shpFilePath);
-	    System.out.println("gisObjectList size:" + gisObjectList.size());
-	    
-	    String wkt = ShapeUtils.getCoordinateSystemWKT(shpFilePath);
-	    System.out.println("WKT:" + wkt);
 	    
         List<ShapeFieldInfo> attrFieldList = new ArrayList<>();
         attrFieldList.add(new ShapeFieldInfo("id", Integer.class));

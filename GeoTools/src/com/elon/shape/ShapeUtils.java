@@ -162,8 +162,6 @@ public class ShapeUtils {
             writer.write();
         }
 
-        // feature.setAttribute("the_geom", new GeometryFactory().createPoint(co));
-        writer.close();
     }
     
     /**
