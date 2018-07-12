@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
  * @author elon
  * @version 2018年6月26日
  */
-public class GisLine extends GISObjectBase {
+public class GISLine extends GISObjectBase {
 
     private static final long serialVersionUID = 495559767188836052L;
 
@@ -21,7 +21,7 @@ public class GisLine extends GISObjectBase {
      */
     private MultiLineString line = null;
     
-    public GisLine(MultiLineString line, List<ShapeFieldInfo> attrFieldList) {
+    public GISLine(MultiLineString line, List<ShapeFieldInfo> attrFieldList) {
         super(EnumGISObjectType.LINE, attrFieldList);
         this.line = line;
     }

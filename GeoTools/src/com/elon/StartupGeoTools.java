@@ -9,7 +9,7 @@ import org.geotools.data.shapefile.ShapefileDataStore;
 
 import com.elon.model.ShapeFieldInfo;
 import com.elon.model.gismodel.GISPoint;
-import com.elon.model.gismodel.GisMultiPolygon;
+import com.elon.model.gismodel.GISMultiPolygon;
 import com.elon.shape.ShapeUtils;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;

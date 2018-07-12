@@ -23,11 +23,12 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 
+import com.elon.constant.EnumGISObjectType;
 import com.elon.model.ShapeFieldInfo;
 import com.elon.model.gismodel.GISObjectBase;
 import com.elon.model.gismodel.GISPoint;
-import com.elon.model.gismodel.GisLine;
-import com.elon.model.gismodel.GisMultiPolygon;
+import com.elon.model.gismodel.GISLine;
+import com.elon.model.gismodel.GISMultiPolygon;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
@@ -92,11 +93,11 @@ public class ShapeUtils {
 
                     T t = null;
                     if (pro.getValue() instanceof MultiPolygon) {
-                        t = (T) new GisMultiPolygon((MultiPolygon) pro.getValue(), attrFieldList);
+                        t = (T) new GISMultiPolygon((MultiPolygon) pro.getValue(), attrFieldList);
                     } else if (pro.getValue() instanceof Point) {
                         t = (T) new GISPoint((Point) pro.getValue(), attrFieldList);
                     } else if (pro.getValue() instanceof MultiLineString) {
-                        t = (T) new GisLine((MultiLineString) pro.getValue(), attrFieldList);
+                        t = (T) new GISLine((MultiLineString) pro.getValue(), attrFieldList);
                     } else {
                         System.out.print("Invalid gis object type:" + pro.getValue().getClass());
                         continue;
@@ -136,17 +137,38 @@ public class ShapeUtils {
         }
         return "";
     }
-    
-    public static void writePoint2ShapeFile(ShapefileDataStore dataStore, List<GISPoint> pointList,
-        List<ShapeFieldInfo> attrFieldList) throws IOException {
 
+    /**
+     * 写GIS对象到Shape文件。
+     * @param dataStore shape文件源
+     * @param gisObjectList 对象列表
+     * @param attrFieldList 属性列表
+     * @throws IOException
+     */
+    public static <T extends GISObjectBase> void writePoint2ShapeFile(ShapefileDataStore dataStore,
+            List<T> gisObjectList, List<ShapeFieldInfo> attrFieldList) throws IOException {
+
+        if (gisObjectList.isEmpty()) {
+            return;
+        }
+        EnumGISObjectType type = gisObjectList.get(0).getType();
+        
         // 设置图层对象属性
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
 
-        sb.setName("point shape");
+        sb.setName("shape");
         attrFieldList.forEach((f) -> sb.add(f.getFieldName(), f.getFieldType()));
-        sb.add("the_geom", Point.class);
+        if (type == EnumGISObjectType.POINT) {
+            sb.add("the_geom", Point.class);            
+        }else if (type == EnumGISObjectType.LINE) {
+            sb.add("the_geom", MultiLineString.class); 
+        }else if (type == EnumGISObjectType.POLYGON) {
+            sb.add("the_geom", MultiPolygon.class);  
+        }else {
+            System.out.println("Invalid gisobject type.");
+            return;
+        }
 
         dataStore.createSchema(sb.buildFeatureType());
         dataStore.setCharset(Charset.forName("UTF-8"));
@@ -155,13 +177,23 @@ public class ShapeUtils {
                 Transaction.AUTO_COMMIT);
 
         // 写数据
-        for (GISPoint point : pointList) {
+        for (T gis : gisObjectList) {
             SimpleFeature feature = writer.next();
-            feature.setAttribute("the_geom", point.getPoint());
-            point.getAttributeMap().forEach((k, v) -> feature.setAttribute(k, v));
+            
+            if (type == EnumGISObjectType.POINT) {
+                feature.setAttribute("the_geom", ((GISPoint)gis).getPoint());
+            }else if (type == EnumGISObjectType.LINE) {
+                feature.setAttribute("the_geom", ((GISLine)gis).getLine());
+            }else if (type == EnumGISObjectType.POLYGON) {
+                feature.setAttribute("the_geom", ((GISMultiPolygon)gis).getPolygon());
+            }else {
+                System.out.println("Invalid gisobject type.");
+                continue;
+            }
+            
+            gis.getAttributeMap().forEach((k, v) -> feature.setAttribute(k, v));
             writer.write();
         }
-
     }
     
     /**

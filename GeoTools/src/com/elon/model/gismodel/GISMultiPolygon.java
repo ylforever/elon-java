@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
  * @author elon
  * @version 2018年6月26日
  */
-public class GisMultiPolygon extends GISObjectBase {
+public class GISMultiPolygon extends GISObjectBase {
 
     private static final long serialVersionUID = -5705724544971923893L;
 
@@ -21,7 +21,7 @@ public class GisMultiPolygon extends GISObjectBase {
      */
     private MultiPolygon polygon = null;;
     
-    public GisMultiPolygon(MultiPolygon polygon, List<ShapeFieldInfo> attrFieldList) {
+    public GISMultiPolygon(MultiPolygon polygon, List<ShapeFieldInfo> attrFieldList) {
         super(EnumGISObjectType.POLYGON, attrFieldList);
         this.polygon = polygon;
     }
