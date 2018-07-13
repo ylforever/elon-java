@@ -9,13 +9,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.FeatureWriter;
 import org.geotools.data.Transaction;
+import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.data.shapefile.ShapefileDataStoreFactory;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.Property;
@@ -145,15 +150,80 @@ public class ShapeUtils {
      * @param attrFieldList 属性列表
      * @throws IOException
      */
-    public static <T extends GISObjectBase> void writePoint2ShapeFile(ShapefileDataStore dataStore,
-            List<T> gisObjectList, List<ShapeFieldInfo> attrFieldList) throws IOException {
-
+    public static <T extends GISObjectBase> void writeShapeFile(ShapefileDataStore dataStore, List<T> gisObjectList,
+            List<ShapeFieldInfo> attrFieldList) throws IOException {
         if (gisObjectList.isEmpty()) {
             return;
         }
         EnumGISObjectType type = gisObjectList.get(0).getType();
-        
+
         // 设置图层对象属性
+        SimpleFeatureType featureType = buildFeatureType(attrFieldList, type);
+        dataStore.createSchema(featureType);
+        dataStore.setCharset(Charset.forName("GBK"));
+
+        List<SimpleFeature> featureList = buildFeatureList(gisObjectList, type, featureType);
+
+        // 写数据
+        SimpleFeatureSource featureSource = (SimpleFeatureSource) dataStore
+                .getFeatureSource(dataStore.getTypeNames()[0]);
+        SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
+        SimpleFeatureCollection collection = new ListFeatureCollection(featureType, featureList);
+
+        Transaction transaction = new DefaultTransaction("create");
+        featureStore.setTransaction(transaction);
+        try {
+            featureStore.addFeatures(collection);
+            transaction.commit();
+        } catch (Exception problem) {
+            problem.printStackTrace();
+            transaction.rollback();
+        } finally {
+            transaction.close();
+        }
+    }
+    
+    /**
+     * 构建feature对象列表。
+     * 
+     * @param gisObjectList GIS对象列表
+     * @param type feature类型
+     * @param featureType
+     * @return feature列表
+     */
+    private static <T extends GISObjectBase> List<SimpleFeature> buildFeatureList(List<T> gisObjectList,
+            EnumGISObjectType type, SimpleFeatureType featureType){
+        
+        List<SimpleFeature> featureList = new ArrayList<>();
+        SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(featureType);
+        for (T gis : gisObjectList) {
+            if (type == EnumGISObjectType.POINT) {
+                featureBuilder.set("the_geom", ((GISPoint)gis).getPoint());
+            }else if (type == EnumGISObjectType.LINE) {
+                featureBuilder.set("the_geom", ((GISLine)gis).getLine());
+            }else if (type == EnumGISObjectType.POLYGON) {
+                featureBuilder.set("the_geom", ((GISMultiPolygon)gis).getPolygon());
+            }else {
+                System.out.println("Invalid gisobject type.");
+                continue;
+            }
+            
+            gis.getAttributeMap().forEach((k, v) -> featureBuilder.set(k, v));
+            featureList.add(featureBuilder.buildFeature(null));
+        }
+        
+        return featureList;
+    }
+    
+    /**
+     * 构建feature类型信息。
+     * 
+     * @param attrFieldList 属性字段列表
+     * @param type gis对象类型
+     * @return feature类型
+     */
+    private static SimpleFeatureType buildFeatureType(List<ShapeFieldInfo> attrFieldList,
+            EnumGISObjectType type) {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
         sb.setCRS(DefaultGeographicCRS.WGS84);
 
@@ -167,33 +237,10 @@ public class ShapeUtils {
             sb.add("the_geom", MultiPolygon.class);  
         }else {
             System.out.println("Invalid gisobject type.");
-            return;
+            return null;
         }
-
-        dataStore.createSchema(sb.buildFeatureType());
-        dataStore.setCharset(Charset.forName("UTF-8"));
-
-        FeatureWriter<SimpleFeatureType, SimpleFeature> writer = dataStore.getFeatureWriter(dataStore.getTypeNames()[0],
-                Transaction.AUTO_COMMIT);
-
-        // 写数据
-        for (T gis : gisObjectList) {
-            SimpleFeature feature = writer.next();
-            
-            if (type == EnumGISObjectType.POINT) {
-                feature.setAttribute("the_geom", ((GISPoint)gis).getPoint());
-            }else if (type == EnumGISObjectType.LINE) {
-                feature.setAttribute("the_geom", ((GISLine)gis).getLine());
-            }else if (type == EnumGISObjectType.POLYGON) {
-                feature.setAttribute("the_geom", ((GISMultiPolygon)gis).getPolygon());
-            }else {
-                System.out.println("Invalid gisobject type.");
-                continue;
-            }
-            
-            gis.getAttributeMap().forEach((k, v) -> feature.setAttribute(k, v));
-            writer.write();
-        }
+        
+        return sb.buildFeatureType();
     }
     
     /**

@@ -9,7 +9,6 @@ import org.geotools.data.shapefile.ShapefileDataStore;
 
 import com.elon.model.ShapeFieldInfo;
 import com.elon.model.gismodel.GISPoint;
-import com.elon.model.gismodel.GISMultiPolygon;
 import com.elon.shape.ShapeUtils;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -28,17 +27,17 @@ public class StartupGeoTools {
         
         GISPoint point1 = new GISPoint(factory.createPoint(new Coordinate(20.11, 35.22)), attrFieldList);
         point1.getAttributeMap().put("id", 6);
-        point1.getAttributeMap().put("name", "666");
+        point1.getAttributeMap().put("name", "111");
         pointList.add(point1);
         
         GISPoint point2 = new GISPoint(factory.createPoint(new Coordinate(50.121, 45.2222)), attrFieldList);
         point2.getAttributeMap().put("id", 8);
-        point2.getAttributeMap().put("name", "888");
+        point2.getAttributeMap().put("name", "222");
         pointList.add(point2);
         
         String shpFilePath2 = workSpacePath + File.separator + "shape/student/student.shp";
         ShapefileDataStore dataStore = ShapeUtils.buildDataStore(shpFilePath2);
-	    ShapeUtils.writePoint2ShapeFile(dataStore, pointList, attrFieldList);
+	    ShapeUtils.writeShapeFile(dataStore, pointList, attrFieldList);
 	    dataStore.dispose();
 	    
 	    System.out.println("Start GeoTools success!");
