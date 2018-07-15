@@ -15,31 +15,33 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 
 public class StartupGeoTools {
 	public static void main(String[] args) throws IOException {
-	    
-	    String workSpacePath = System.getProperty("user.dir");
-	    
-        List<ShapeFieldInfo> attrFieldList = new ArrayList<>();
-        attrFieldList.add(new ShapeFieldInfo("id", Integer.class));
-        attrFieldList.add(new ShapeFieldInfo("name", String.class));
-        
-        GeometryFactory factory = new GeometryFactory();
-        List<GISPoint> pointList = new ArrayList<>();
-        
-        GISPoint point1 = new GISPoint(factory.createPoint(new Coordinate(20.11, 35.22)), attrFieldList);
-        point1.getAttributeMap().put("id", 6);
-        point1.getAttributeMap().put("name", "111");
-        pointList.add(point1);
-        
-        GISPoint point2 = new GISPoint(factory.createPoint(new Coordinate(50.121, 45.2222)), attrFieldList);
-        point2.getAttributeMap().put("id", 8);
-        point2.getAttributeMap().put("name", "222");
-        pointList.add(point2);
-        
-        String shpFilePath2 = workSpacePath + File.separator + "shape/student/student.shp";
-        ShapefileDataStore dataStore = ShapeUtils.buildDataStore(shpFilePath2);
-	    ShapeUtils.writeShapeFile(dataStore, pointList, attrFieldList);
-	    dataStore.dispose();
-	    
+	    writeShapeFile();
 	    System.out.println("Start GeoTools success!");
+	}
+	
+	private static void writeShapeFile() throws IOException {
+	       String workSpacePath = System.getProperty("user.dir");
+	        
+	        List<ShapeFieldInfo> attrFieldList = new ArrayList<>();
+	        attrFieldList.add(new ShapeFieldInfo("id", Integer.class));
+	        attrFieldList.add(new ShapeFieldInfo("name", String.class));
+	        
+	        GeometryFactory factory = new GeometryFactory();
+	        List<GISPoint> pointList = new ArrayList<>();
+	        
+	        GISPoint point1 = new GISPoint(factory.createPoint(new Coordinate(20.11, 35.22)), attrFieldList);
+	        point1.getAttributeMap().put("id", 6);
+	        point1.getAttributeMap().put("name", "111");
+	        pointList.add(point1);
+	        
+	        GISPoint point2 = new GISPoint(factory.createPoint(new Coordinate(50.121, 45.2222)), attrFieldList);
+	        point2.getAttributeMap().put("id", 8);
+	        point2.getAttributeMap().put("name", "222");
+	        pointList.add(point2);
+	        
+	        String shpFilePath2 = workSpacePath + File.separator + "shape/student/student.shp";
+	        ShapefileDataStore dataStore = ShapeUtils.buildDataStore(shpFilePath2);
+	        ShapeUtils.writeShapeFile(dataStore, pointList, attrFieldList);
+	        dataStore.dispose();
 	}
 }

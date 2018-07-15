@@ -22,11 +22,14 @@ import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.CRS;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.elon.constant.EnumGISObjectType;
 import com.elon.model.ShapeFieldInfo;
@@ -158,7 +161,13 @@ public class ShapeUtils {
         EnumGISObjectType type = gisObjectList.get(0).getType();
 
         // 设置图层对象属性
-        SimpleFeatureType featureType = buildFeatureType(attrFieldList, type);
+        SimpleFeatureType featureType = null;
+        try {
+            featureType = buildFeatureType(attrFieldList, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         dataStore.createSchema(featureType);
         dataStore.setCharset(Charset.forName("GBK"));
 
@@ -221,11 +230,17 @@ public class ShapeUtils {
      * @param attrFieldList 属性字段列表
      * @param type gis对象类型
      * @return feature类型
+     * @throws FactoryException 
+     * @throws NoSuchAuthorityCodeException 
      */
     private static SimpleFeatureType buildFeatureType(List<ShapeFieldInfo> attrFieldList,
-            EnumGISObjectType type) {
+            EnumGISObjectType type) throws NoSuchAuthorityCodeException, FactoryException {
         SimpleFeatureTypeBuilder sb = new SimpleFeatureTypeBuilder();
-        sb.setCRS(DefaultGeographicCRS.WGS84);
+
+        String crs3857Str = "PROJCS[\"WGS_1984_Web_Mercator_Auxiliary_Sphere\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Mercator_Auxiliary_Sphere\"],PARAMETER[\"False_Easting\",0.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",0.0],PARAMETER[\"Standard_Parallel_1\",0.0],PARAMETER[\"Auxiliary_Sphere_Type\",0.0],UNIT[\"Meter\",1.0]]";
+
+        CoordinateReferenceSystem crs3857 = CRS.parseWKT(crs3857Str);
+        sb.setCRS(crs3857);
 
         sb.setName("shape");
         attrFieldList.forEach((f) -> sb.add(f.getFieldName(), f.getFieldType()));
