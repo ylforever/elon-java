@@ -30,7 +30,7 @@ public class WSUserV2 {
 	public void addUserV2(@RequestBody User user)
 	{
 		user.setSexType(EnumSexType.MAN);
-		userMapper.insertUser(user);
+//		userMapper.insertUser(user);
 	}
 	
 	/**
@@ -38,11 +38,11 @@ public class WSUserV2 {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value="/v2/query-user", method=RequestMethod.GET)
-	public List<User> queryAllUser() 
-	{
-		return userMapper.getAllUsers();
-	}
+//	@RequestMapping(value="/v2/query-user", method=RequestMethod.GET)
+//	public List<User> queryAllUser() 
+//	{
+//		return userMapper.getAllUsers();
+//	}
 	
 	@RequestMapping(value="/v2/query-user-age", method=RequestMethod.GET)
 	public Map<Integer, Integer> queryUserAge(){
