@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.geotools.data.DefaultTransaction;
@@ -23,7 +21,6 @@ import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
-import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -33,10 +30,10 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.elon.constant.EnumGISObjectType;
 import com.elon.model.ShapeFieldInfo;
-import com.elon.model.gismodel.GISObjectBase;
-import com.elon.model.gismodel.GISPoint;
 import com.elon.model.gismodel.GISLine;
 import com.elon.model.gismodel.GISMultiPolygon;
+import com.elon.model.gismodel.GISObjectBase;
+import com.elon.model.gismodel.GISPoint;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
@@ -94,26 +91,22 @@ public class ShapeUtils {
             FeatureIterator<SimpleFeature> iter = fcResult.features();
             while (iter.hasNext()) {
                 SimpleFeature sf = iter.next();
-                Collection<Property> property = sf.getProperties();
-                Iterator<Property> iterP = property.iterator();
-                while (iterP.hasNext()) {
-                    Property pro = iterP.next();
+                Object geometry = sf.getDefaultGeometry();
 
-                    T t = null;
-                    if (pro.getValue() instanceof MultiPolygon) {
-                        t = (T) new GISMultiPolygon((MultiPolygon) pro.getValue(), attrFieldList);
-                    } else if (pro.getValue() instanceof Point) {
-                        t = (T) new GISPoint((Point) pro.getValue(), attrFieldList);
-                    } else if (pro.getValue() instanceof MultiLineString) {
-                        t = (T) new GISLine((MultiLineString) pro.getValue(), attrFieldList);
-                    } else {
-                        System.out.print("Invalid gis object type:" + pro.getValue().getClass());
-                        continue;
-                    }
-
-                    fillGisObjectAttr(t, sf);
-                    gisObjectList.add(t);
+                T t = null;
+                if (geometry instanceof MultiPolygon) {
+                    t = (T) new GISMultiPolygon((MultiPolygon) geometry, attrFieldList);
+                } else if (geometry instanceof Point) {
+                    t = (T) new GISPoint((Point) geometry, attrFieldList);
+                } else if (geometry instanceof MultiLineString) {
+                    t = (T) new GISLine((MultiLineString) geometry, attrFieldList);
+                } else {
+                    System.out.print("Invalid gis object type:" + geometry.getClass());
+                    continue;
                 }
+
+                fillGisObjectAttr(t, sf);
+                gisObjectList.add(t);
             }
         } catch (IOException e) {
             e.printStackTrace();
