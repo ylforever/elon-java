@@ -1,11 +1,13 @@
 package com.elon.springbootdemo.model;
 
 import com.elon.springbootdemo.constant.EnumSexType;
+import com.elon.springbootdemo.manager.invalidator.FieldLengthInvalidator;
 
 public class User
 {
 	private int userId = -1;
 
+	@FieldLengthInvalidator(maxLength=10)
 	private String name = "";
 	
 	private int age = -1;
