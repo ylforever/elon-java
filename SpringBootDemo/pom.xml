@@ -18,7 +18,7 @@
     <parent>  
         <groupId>org.springframework.boot</groupId>  
         <artifactId>spring-boot-starter-parent</artifactId>  
-        <version>1.4.0.BUILD-SNAPSHOT</version>  
+        <version>1.5.14.RELEASE</version>  
     </parent>  
   
     <!-- Add typical dependencies for a web application -->  
@@ -65,48 +65,48 @@
 		    <artifactId>springfox-swagger-ui</artifactId>
 		    <version>2.8.0</version>
 		</dependency>
-		        
+		<dependency>  
+            <groupId>org.springframework.boot</groupId>  
+            <artifactId>spring-boot-starter-aop</artifactId>  
+        </dependency>  
     </dependencies>  
   
     <!-- Package as an executable jar -->  
     <build>  
-        <plugins>  
-            <plugin>  
-                <groupId>org.springframework.boot</groupId>  
-                <artifactId>spring-boot-maven-plugin</artifactId>  
-            </plugin>  
-        </plugins>  
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>  
   
     <!-- Add Spring repositories -->  
     <!-- (you don't need this if you are using a .RELEASE version) -->  
     <repositories>  
-        <repository>  
-            <id>spring-snapshots</id>  
-            <url>http://repo.spring.io/snapshot</url>  
-            <snapshots><enabled>true</enabled></snapshots>  
-        </repository>  
-        <repository>  
-            <id>spring-milestones</id>  
-            <url>http://repo.spring.io/milestone</url>  
-        </repository>  
-        <repository>  
-            <id>springfox-swagger</id>  
-            <url>https://mvnrepository.com/artifact/io.springfox/springfox-swagger2</url>  
-        </repository>
-        <repository>  
-            <id>springfox-swagger-ui</id>  
-            <url>https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui</url>  
-        </repository>
+        <repository>
+            <id>aliyun-repos</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository> 
     </repositories>  
-    <pluginRepositories>  
-        <pluginRepository>  
-            <id>spring-snapshots</id>  
-            <url>http://repo.spring.io/snapshot</url>  
-        </pluginRepository>  
-        <pluginRepository>  
-            <id>spring-milestones</id>  
-            <url>http://repo.spring.io/milestone</url>  
-        </pluginRepository>  
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-plugin</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
 </project>

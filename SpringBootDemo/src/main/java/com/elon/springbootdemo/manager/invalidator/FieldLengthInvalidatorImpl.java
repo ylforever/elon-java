@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 public class FieldLengthInvalidatorImpl implements ConstraintValidator<FieldLengthInvalidator, String> {
 
     private int maxLength = 0;
-    
+
     @Override
     public void initialize(FieldLengthInvalidator invalidator) {
         maxLength = invalidator.maxLength();
@@ -24,7 +24,7 @@ public class FieldLengthInvalidatorImpl implements ConstraintValidator<FieldLeng
         if (fieldValue.length() > maxLength) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("对象属性长度超过限制。").addConstraintViolation();
-            
+
             // 校验失败返回false。返回true上游收集不到错误信息。
             return false;
         }

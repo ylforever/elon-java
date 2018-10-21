@@ -1,5 +1,7 @@
 package com.elon.springbootdemo.ws;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -7,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.elon.springbootdemo.constant.EnumSexType;
 import com.elon.springbootdemo.mapper.UserMapperV2;
 import com.elon.springbootdemo.model.QueryMapHelper;
 import com.elon.springbootdemo.model.User;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
 @RestController
 @RequestMapping(value="WSUserV2")
@@ -38,11 +43,23 @@ public class WSUserV2 {
 	 * 
 	 * @return
 	 */
-//	@RequestMapping(value="/v2/query-user", method=RequestMethod.GET)
-//	public List<User> queryAllUser() 
-//	{
-//		return userMapper.getAllUsers();
-//	}
+    @RequestMapping(value = "/v2/query-user", method = RequestMethod.GET)
+    public void queryAllUser(@RequestParam("param") String param) {
+        List<Integer> result =  parseArray(param, Integer.class);
+    }
+    
+    private <T> List<T> parseArray(String param, Class<T> c){
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(param.substring(1, param.length()-1)).append("]");
+        List<T> result = new ArrayList<>();
+        
+        TypeToken<List<T>> type = new TypeToken<List<T>>() {
+            private static final long serialVersionUID = 1L;
+        };
+        result = new Gson().fromJson(sb.toString(), type.getType());
+        return result;
+    }
 	
 	@RequestMapping(value="/v2/query-user-age", method=RequestMethod.GET)
 	public Map<Integer, Integer> queryUserAge(){
