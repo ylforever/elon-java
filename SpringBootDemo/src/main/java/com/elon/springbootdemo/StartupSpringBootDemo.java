@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.elon.springbootdemo.manager.InvalidatorMgr;
 import com.elon.springbootdemo.model.User;
+import com.elon.springbootdemo.ws.WSExample;
 
 /**
  * Hello world!
@@ -15,16 +16,18 @@ import com.elon.springbootdemo.model.User;
  */
 
 @SpringBootApplication
-@MapperScan("com.elon.springbootdemo")
+@MapperScan(basePackages= {"com.elon.springbootdemo"})
 public class StartupSpringBootDemo 
 {
     public static void main( String[] args )
     {
-        User user = new User();
-        user.setName("ahskahskhqlwjqlwqlwhqlhwlqjwlqhwlhqwhqlwjjqlwl");
-        List<String> messageList = InvalidatorMgr.instance().validate(user);
-        System.out.println(messageList);
+//        User user = new User();
+//        user.setName("ahskahskhqlwjqlwqlwhqlhwlqjwlqhwlhqwhqlwjjqlwl");
+//        List<String> messageList = InvalidatorMgr.instance().validate(user);
+//        System.out.println(messageList);
         
         SpringApplication.run(StartupSpringBootDemo.class, args);
+        
+//        new WSExample().queryUser("");
     }
 }
