@@ -20,9 +20,27 @@
         <artifactId>spring-boot-starter-parent</artifactId>  
         <version>1.5.14.RELEASE</version>  
     </parent>  
+	
+	
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Finchley.M9</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+	</dependencyManagement>
   
     <!-- Add typical dependencies for a web application -->  
     <dependencies>  
+<!-- 		<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-context</artifactId>
+		<version>2.1.0.M2</version>
+		</dependency> -->
         <dependency>  
             <groupId>org.springframework.boot</groupId>  
             <artifactId>spring-boot-starter-web</artifactId>   
@@ -94,7 +112,7 @@
     <repositories>  
         <repository>
             <id>aliyun-repos</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/spring</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -103,7 +121,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>aliyun-plugin</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>https://maven.aliyun.com/repository/spring</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
